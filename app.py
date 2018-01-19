@@ -69,6 +69,22 @@ def upload_file():
             return render_template('index.html', error_message="File uploaded!")
 
 
+@app.route('/CROP')
+def crop_files():
+  original_files = []
+  croped_files = []
+  s3 = boto3.resource('s3')
+  bucket_name = 'microservice-backet-linuxacademyuser'
+  my_bucket = s3.Bucket(bucket_name)
+  for file in my_bucket.objects.all():
+    if 'CROP' in file.key:
+      url = pre_signed_url(file.key, bucket_name)
+      original_files.append(dict(key=file.key, url=url))
+  for file in my_bucket.objects.all():
+    if 'uploads' in file.key:
+      url = pre_signed_url(file.key, bucket_name)
+      croped_files.append(dict(key=file.key, url=url))
+  return render_template("crop.html", original_files=original_files, croped_files=croped_files)
 
 
 

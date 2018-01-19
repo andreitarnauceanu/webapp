@@ -1,0 +1,32 @@
+{% extends "_layout.html" %}
+{% block title %}Uploaded files {% endblock %}
+
+{% block content %}
+
+<h1>Uploaded files</h1>
+
+<table class="table table-condensed" border="0px">
+<tr>
+<td><h4>Original files</h4></td>
+<td><h4>link</h4></td>
+</tr>
+{% for file in original_files %}
+            <tr>
+                <td>{{ file.key }}</td>
+                <td>[<a href="{{ file.url }}" target="_blank">Link</a>]</td>
+	    </tr>
+        {% endfor %}
+</table>
+<table class="table table-condensed" border="0px">
+<tr>
+<td><h4>Modified files</h4></td>
+<td><h4>link</h4></td>
+</tr>
+{% for file in croped_files %}
+                <td>{{ file.key }}</td>
+                <td>[<a href="{{ file.link }}" target="_blank">Link</a>]</td>
+            </tr>
+	{% endfor %}
+</table>
+{% endblock %}
+
