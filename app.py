@@ -1,24 +1,24 @@
 
 import os
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
 from boto3.s3.transfer import S3Transfer
 import boto3
 from utils import *
+import json
 
 
+GOOGLE_URL_SHORTEN_API = 'AIzaSyBrnkM64WKqmKa_FmRbR6WIZeAu-hXE-6I' # IP Address restrictions
 UPLOAD_FOLDER = 'uploads'
-# CROP_FOLDER = ''
 ALLOWED_EXTENSIONS = set(['bmp', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # Send message to SQS
 def sendmessage(filename, bucket_name, coordinates):
@@ -37,6 +37,11 @@ def sendmessage(filename, bucket_name, coordinates):
         ('uploads/{}'.format(filename), bucket_name, coordinates))
     )
     return response
+
+
+@app.route('/')
+def index():
+    return render_template("index.html")
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -60,30 +65,13 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             uploadfile(os.path.join(app.config['UPLOAD_FOLDER'], filename), "microservice-backet-linuxacademyuser", 'uploads')
             sendmessage(filename, "microservice-backet-linuxacademyuser", (x1, y1, x2, y2))
-
             removefile(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return render_template('index.html', error_message="File uploaded!")
 
-            return redirect('/')
-    return '''
-    <!doctype html>
-    <title>Image crop</title>
-    <h1>Upload new image to crop</h1>
-    <form method=post enctype=multipart/form-data>
-    <table>
-    <tr>
-        <th> X1: <input type=test name=x1 size=4></th>
-        <th> Y1: <input type=test name=y1 size=4></th>
-    </tr><tr>
-        <th> X2: <input type=test name=x2 size=4></th>
-        <th> Y2: <input type=test name=y2 size=4></th>
-    </tr>
-    </table>
-    <p><input type=file name=file>
-    <input type=submit value=Upload>
-    </form>
-    '''
+
+
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(debug=True)
 

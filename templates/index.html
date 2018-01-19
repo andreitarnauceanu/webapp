@@ -1,0 +1,22 @@
+{% extends "_layout.html" %}
+{% block title %}<Assist>Image crop</Assist>{% endblock %}
+
+{% block content %} 
+<div class="container">
+    <h1>Upload new image to crop</h1>
+    <form method=post enctype=multipart/form-data>
+    <table>
+    <tr>
+        <th> X1: <input type=test name=x1 size=4></th>
+        <th> Y1: <input type=test name=y1 size=4></th>
+    </tr><tr>
+        <th> X2: <input type=test name=x2 size=4></th>
+        <th> Y2: <input type=test name=y2 size=4></th>
+    </tr>
+    </table>
+    <p><input type=file name=file>
+    <input type=submit value=Upload>
+    </form>
+</div>
+{% endblock %}
+

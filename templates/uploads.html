@@ -1,0 +1,27 @@
+{% extends "_layout.html" %}
+{% block title %}Uploaded files {% endblock %}
+
+{% block content %}
+
+<h1>Uploaded files</h1>
+
+<table class="table table-condensed" border="0px">
+<tr>
+<td><h4>upload</h4></td>
+<td><h4>link</h4></td>
+<td><h4>CROP</h4></td>
+<td><h4>link</h4></td>
+</tr>
+{% for file in lista %}
+            <tr>
+                <td>{{ file.org.name }}</td>
+                <td>[<a href="{{ file.org.link }}" target="_blank">Link</a>]</td>
+                <td>{{ file.crp.name }}</td>
+                <td>[<a href="{{ file.crp.link }}" target="_blank">Link</a>]</td>
+            </tr>
+	{% endfor %}
+
+{% endfor %}
+</table>
+{% endblock %}
+
